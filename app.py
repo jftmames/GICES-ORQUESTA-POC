@@ -104,6 +104,41 @@ def check_sources_coverage(
 
 
 # ---------------------------
+# Sección de descarga del JSON
+# ---------------------------
+
+def render_download_section(output_path: Path) -> None:
+    """
+    Muestra, si existe, un bloque con botón de descarga de `knowledge_vectors.json`
+    para poder compartirlo con terceros (consultora, auditor, etc.).
+    """
+    st.markdown("---")
+    st.subheader("Descargar modelo de embeddings (`knowledge_vectors.json`)")
+
+    if not output_path.exists():
+        st.info(
+            "Todavía no se ha generado `knowledge_vectors.json`.\n\n"
+            "Ejecuta primero la indexación para poder descargar el fichero."
+        )
+        return
+
+    # Leemos el archivo en binario para pasarlo al botón de descarga
+    data = output_path.read_bytes()
+    size_kb = len(data) / 1024
+
+    st.write(f"Archivo encontrado en: `{output_path}`")
+    st.write(f"Tamaño aproximado: **{size_kb:.1f} KB**")
+
+    st.download_button(
+        label="⬇️ Descargar `knowledge_vectors.json`",
+        data=data,
+        file_name="knowledge_vectors.json",
+        mime="application/json",
+        use_container_width=True,
+    )
+
+
+# ---------------------------
 # Aplicación principal
 # ---------------------------
 
@@ -246,6 +281,9 @@ def main() -> None:
             st.write(f"Fragmentos generados: **{len(chunks)}**")
             st.write("Modelo de embeddings: `text-embedding-3-small`")
             st.write(f"Archivo de salida: `{output_path}`")
+
+    # 5) Sección de descarga (si el fichero ya existe, incluso de ejecuciones previas)
+    render_download_section(output_path)
 
 
 if __name__ == "__main__":

@@ -5,7 +5,13 @@ from typing import Any, Dict, List
 
 import streamlit as st
 from openai import OpenAI
-import yaml  # Para leer sources.yaml
+
+# Intentamos importar yaml (pyyaml). Si no está instalada,
+# degradamos a un modo sin catálogo para que la app no se caiga.
+try:
+    import yaml  # type: ignore
+except ModuleNotFoundError:
+    yaml = None
 
 from modules.pdf_loader import load_pdfs
 from modules.text_chunker import chunk_documents
@@ -44,8 +50,16 @@ def get_openai_client() -> OpenAI | None:
 def load_sources_catalog(catalog_path: Path) -> Dict[str, Any] | None:
     """
     Carga el catálogo de fuentes normativas desde sources.yaml, si existe.
-    Devuelve un dict con la estructura YAML o None si hay error.
+    Si 'yaml' (pyyaml) no está disponible, devuelve None y muestra un aviso.
     """
+    if yaml is None:
+        # Dependencia no instalada: no rompemos la app, solo desactivamos esta función
+        st.info(
+            "La librería 'pyyaml' no está instalada. "
+            "Se omite la lectura de `sources.yaml`, pero la indexación de PDFs funciona igual."
+        )
+        return None
+
     try:
         with catalog_path.open("r", encoding="utf-8") as f:
             catalog: Dict[str, Any] = yaml.safe_load(f)
@@ -147,7 +161,7 @@ def main() -> None:
                 st.write("No se han encontrado entradas en `sources.yaml`.")
     else:
         st.warning(
-            "No se ha encontrado `sources.yaml` en la raíz del proyecto.\n\n"
+            "No se ha encontrado `sources.yaml` en la raíz del proyecto o no se ha podido leer.\n\n"
             "Puedes crear este archivo para documentar y auditar las fuentes normativas "
             "que deberían estar cargadas en `rag/knowledge_base`."
         )
@@ -236,4 +250,5 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
 

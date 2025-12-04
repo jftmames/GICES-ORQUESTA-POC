@@ -1,15 +1,3 @@
 streamlit
-pandas
 openai
-pymupdf
-pyshacl
-rdflib
-jsonschema
-pyyaml
-plotly
-networkx
-lxml
-graphviz
-# --- Motor Vectorial y la Arquitectura ---
-numpy
-scikit-learn
+pypdf

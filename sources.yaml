@@ -1,0 +1,137 @@
+# Catálogo de fuentes normativas para GICES-INGESTA-APP
+# Cada entrada define: qué es, dónde se descarga y cómo se llama el fichero en el repo.
+
+version: 1
+generated_at: 2025-12-04
+maintainer: GICES
+
+sources:
+  - id: csrd_2022_2464
+    label: "Directiva (UE) 2022/2464 (CSRD)"
+    framework: "CSRD"
+    jurisdiction: "EU"
+    type: "directive"
+    language: "ES"
+    official_url: "https://eur-lex.europa.eu/legal-content/ES/TXT/?uri=CELEX:32022L2464"
+    repo_filename: "CSRD_2022_2464_ES.pdf"
+    recommended_path: "rag/knowledge_base/CSRD_2022_2464_ES.pdf"
+
+  - id: esrs_reg_2023_2772
+    label: "Reglamento Delegado (UE) 2023/2772 (ESRS Set 1)"
+    framework: "ESRS"
+    jurisdiction: "EU"
+    type: "delegated_regulation"
+    language: "ES"
+    official_url: "https://eur-lex.europa.eu/legal-content/ES/TXT/?uri=CELEX:32023R2772"
+    repo_filename: "ESRS_RegDelegado_2023_2772_ES.pdf"
+    recommended_path: "rag/knowledge_base/ESRS_RegDelegado_2023_2772_ES.pdf"
+
+  - id: taxonomia_2020_852
+    label: "Reglamento (UE) 2020/852 (Taxonomía)"
+    framework: "Taxonomy"
+    jurisdiction: "EU"
+    type: "regulation"
+    language: "ES"
+    official_url: "https://eur-lex.europa.eu/legal-content/ES/TXT/?uri=CELEX:32020R0852"
+    repo_filename: "TaxonomiaUE_Reg_2020_852_ES.pdf"
+    recommended_path: "rag/knowledge_base/TaxonomiaUE_Reg_2020_852_ES.pdf"
+
+  - id: csddd_2024_1760
+    label: "Directiva (UE) 2024/1760 (CSDDD)"
+    framework: "CSDDD"
+    jurisdiction: "EU"
+    type: "directive"
+    language: "ES"
+    official_url: "https://eur-lex.europa.eu/legal-content/ES/TXT/?uri=CELEX:32024L1760"
+    repo_filename: "CSDDD_2024_1760_ES.pdf"
+    recommended_path: "rag/knowledge_base/CSDDD_2024_1760_ES.pdf"
+
+  - id: lies_proyecto_121_000038
+    label: "Proyecto de Ley de Información Empresarial sobre Sostenibilidad (LIES)"
+    framework: "CSRD_Transposition"
+    jurisdiction: "ES"
+    type: "draft_law"
+    language: "ES"
+    official_url: "https://www.congreso.es/public_oficiales/L15/CONG/BOCG/A/BOCG-15-A-38-1.PDF"
+    repo_filename: "LIES_ProyectoLey_121_000038_ES.pdf"
+    recommended_path: "rag/knowledge_base/LIES_ProyectoLey_121_000038_ES.pdf"
+
+  - id: cnmv_icac_2024_10_22
+    label: "Comunicado conjunto CNMV-ICAC 22/10/2024"
+    framework: "CSRD_Transition"
+    jurisdiction: "ES"
+    type: "joint_communication"
+    language: "ES"
+    official_url: "https://www.cnmv.es/portal/verDoc.axd?t={comunicado_2024_10_22}"
+    repo_filename: "CNMV_ICAC_ComunicadoConjunto_2024_10_22.pdf"
+    recommended_path: "rag/knowledge_base/CNMV_ICAC_ComunicadoConjunto_2024_10_22.pdf"
+
+  - id: cnmv_icac_2025_11_19
+    label: "Comunicado conjunto CNMV-ICAC 19/11/2025"
+    framework: "CSRD_Transition"
+    jurisdiction: "ES"
+    type: "joint_communication"
+    language: "ES"
+    official_url: "https://www.cnmv.es/portal/verDoc.axd?t={comunicado_2025_11_19}"
+    repo_filename: "CNMV_ICAC_ComunicadoConjunto_2025_11_19.pdf"
+    recommended_path: "rag/knowledge_base/CNMV_ICAC_ComunicadoConjunto_2025_11_19.pdf"
+
+  - id: efrag_ig1
+    label: "EFRAG IG 1 – Materiality Assessment Implementation Guidance"
+    framework: "ESRS_Implementation"
+    jurisdiction: "EU"
+    type: "implementation_guidance"
+    language: "EN"
+    official_url: "https://www.efrag.org/News/Public-450/EFRAG-publishes-IG-1-Materiality-Assessment-Implementation-Guidance"
+    repo_filename: "EFRAG_IG1_Materiality_Assessment.pdf"
+    recommended_path: "rag/knowledge_base/EFRAG_IG1_Materiality_Assessment.pdf"
+
+  - id: efrag_ig2
+    label: "EFRAG IG 2 – Value Chain Implementation Guidance"
+    framework: "ESRS_Implementation"
+    jurisdiction: "EU"
+    type: "implementation_guidance"
+    language: "EN"
+    official_url: "https://www.efrag.org/News/Public-451/EFRAG-publishes-IG-2-Value-Chain-Implementation-Guidance"
+    repo_filename: "EFRAG_IG2_Value_Chain.pdf"
+    recommended_path: "rag/knowledge_base/EFRAG_IG2_Value_Chain.pdf"
+
+  - id: efrag_ig3_datapoints
+    label: "EFRAG IG 3 – List of ESRS Datapoints (Excel)"
+    framework: "ESRS_Datapoints"
+    jurisdiction: "EU"
+    type: "datapoints_list"
+    language: "EN"
+    official_url: "https://www.efrag.org/News/Public-452/EFRAG-publishes-IG-3-List-of-ESRS-Datapoints"
+    repo_filename: "EFRAG_IG3_List_of_ESRS_Datapoints.xlsx"
+    recommended_path: "rag/knowledge_base/EFRAG_IG3_List_of_ESRS_Datapoints.xlsx"
+
+  - id: efrag_ig3_explanatory_note
+    label: "EFRAG IG 3 – Explanatory Note"
+    framework: "ESRS_Datapoints"
+    jurisdiction: "EU"
+    type: "explanatory_note"
+    language: "EN"
+    official_url: "https://www.efrag.org/Assets/Download?assetUrl=/sites/webpublishing/SiteAssets/IG3_explanatory_note.pdf"
+    repo_filename: "EFRAG_IG3_Explanatory_Note.pdf"
+    recommended_path: "rag/knowledge_base/EFRAG_IG3_Explanatory_Note.pdf"
+
+  - id: ifrs_s1
+    label: "NIIF S1 – Requerimientos Generales de Información a Revelar relacionada con la Sostenibilidad"
+    framework: "IFRS_S1"
+    jurisdiction: "International"
+    type: "standard"
+    language: "ES"
+    official_url: "https://www.ifrs.org/issued-standards/ifrs-sustainability-standards/niif-s1/"
+    repo_filename: "NIIF_S1_Requerimientos_Generales_ES.pdf"
+    recommended_path: "rag/knowledge_base/NIIF_S1_Requerimientos_Generales_ES.pdf"
+
+  - id: ifrs_s2
+    label: "NIIF S2 – Información a Revelar relacionada con el Clima"
+    framework: "IFRS_S2"
+    jurisdiction: "International"
+    type: "standard"
+    language: "ES"
+    official_url: "https://www.ifrs.org/issued-standards/ifrs-sustainability-standards/niif-s2/"
+    repo_filename: "NIIF_S2_Info_Revelar_Clima_ES.pdf"
+    recommended_path: "rag/knowledge_base/NIIF_S2_Info_Revelar_Clima_ES.pdf"

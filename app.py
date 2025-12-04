@@ -1,9 +1,11 @@
 import os
 import time
 from pathlib import Path
+from typing import Any, Dict, List
 
 import streamlit as st
 from openai import OpenAI
+import yaml  # Para leer sources.yaml
 
 from modules.pdf_loader import load_pdfs
 from modules.text_chunker import chunk_documents
@@ -11,18 +13,22 @@ from modules.embeddings_engine import compute_embeddings
 from modules.knowledge_builder import build_knowledge_vectors, save_knowledge_vectors
 
 
+# ---------------------------
+# Utilidades para OpenAI
+# ---------------------------
+
 def get_openai_client() -> OpenAI | None:
     """
     Inicializa el cliente de OpenAI.
     Intenta primero con st.secrets y luego con variables de entorno.
     """
-    api_key = None
+    api_key: str | None = None
 
     # Streamlit Cloud: secrets
     if "OPENAI_API_KEY" in st.secrets:
         api_key = st.secrets["OPENAI_API_KEY"]
     else:
-        # Fallback: variable de entorno (por si lo ejecutas en otro entorno)
+        # Fallback: variable de entorno (por si se ejecuta en otro entorno)
         api_key = os.environ.get("OPENAI_API_KEY")
 
     if not api_key:
@@ -31,6 +37,62 @@ def get_openai_client() -> OpenAI | None:
     return OpenAI(api_key=api_key)
 
 
+# ---------------------------
+# Utilidades para sources.yaml
+# ---------------------------
+
+def load_sources_catalog(catalog_path: Path) -> Dict[str, Any] | None:
+    """
+    Carga el catálogo de fuentes normativas desde sources.yaml, si existe.
+    Devuelve un dict con la estructura YAML o None si hay error.
+    """
+    try:
+        with catalog_path.open("r", encoding="utf-8") as f:
+            catalog: Dict[str, Any] = yaml.safe_load(f)
+        return catalog
+    except FileNotFoundError:
+        return None
+    except Exception as e:
+        st.error(f"Error al leer sources.yaml: {e}")
+        return None
+
+
+def check_sources_coverage(
+    catalog: Dict[str, Any],
+    kb_path: Path,
+) -> List[Dict[str, Any]]:
+    """
+    Compara las fuentes definidas en sources.yaml con los ficheros
+    realmente presentes en rag/knowledge_base.
+    Devuelve una lista de filas con id, label, filename y exists.
+    """
+    rows: List[Dict[str, Any]] = []
+    sources = catalog.get("sources", []) or []
+
+    for src in sources:
+        repo_filename = src.get("repo_filename")
+        if not repo_filename:
+            continue
+
+        expected_path = kb_path / repo_filename
+        exists = expected_path.exists()
+
+        rows.append(
+            {
+                "id": src.get("id", ""),
+                "label": src.get("label", ""),
+                "filename": repo_filename,
+                "exists": "✅" if exists else "❌",
+            }
+        )
+
+    return rows
+
+
+# ---------------------------
+# Aplicación principal
+# ---------------------------
+
 def main() -> None:
     st.set_page_config(
         page_title="GICES · Motor de Inteligencia Vectorial",
@@ -38,14 +100,16 @@ def main() -> None:
     )
 
     st.title("GICES · Motor de Inteligencia Vectorial (Ingesta y Contexto)")
-    st.caption("Componente 01 — Indexación de normativa UE y generación de `knowledge_vectors.json`")
+    st.caption("Componente 01 — Indexación de normativa UE/ES y generación de `knowledge_vectors.json`")
 
     base_path = Path(__file__).parent
     kb_path = base_path / "rag" / "knowledge_base"
     output_path = base_path / "rag" / "knowledge_vectors.json"
+    catalog_path = base_path / "sources.yaml"
 
     kb_path.mkdir(parents=True, exist_ok=True)
 
+    # 1) Carga de PDFs disponibles en la carpeta
     pdf_files = sorted(kb_path.glob("*.pdf"))
 
     st.subheader("Munición disponible (PDFs de normativa)")
@@ -53,15 +117,42 @@ def main() -> None:
     st.write(f"PDFs detectados: **{len(pdf_files)}**")
 
     if pdf_files:
-        with st.expander("Ver lista de PDFs"):
+        with st.expander("Ver lista de PDFs cargados"):
             for p in pdf_files:
                 st.write(f"- {p.name}")
     else:
         st.info(
             "No se han encontrado documentos en `rag/knowledge_base`.\n\n"
-            "Sube aquí los Reglamentos, Directivas u otros PDFs que quieras indexar."
+            "Sube aquí los Reglamentos, Directivas y demás PDFs que quieras indexar."
         )
 
+    # 2) Carga del catálogo de fuentes (sources.yaml), si existe
+    catalog = load_sources_catalog(catalog_path)
+
+    if catalog is not None:
+        coverage_rows = check_sources_coverage(catalog, kb_path)
+        total_defined = len(coverage_rows)
+        total_present = sum(1 for r in coverage_rows if r["exists"] == "✅")
+
+        st.subheader("Cobertura de fuentes normativas (sources.yaml)")
+        st.write(
+            f"Fuentes definidas en catálogo: **{total_defined}** · "
+            f"Fuentes presentes en `rag/knowledge_base`: **{total_present}**"
+        )
+
+        with st.expander("Detalle de cobertura de fuentes"):
+            if coverage_rows:
+                st.dataframe(coverage_rows, use_container_width=True)
+            else:
+                st.write("No se han encontrado entradas en `sources.yaml`.")
+    else:
+        st.warning(
+            "No se ha encontrado `sources.yaml` en la raíz del proyecto.\n\n"
+            "Puedes crear este archivo para documentar y auditar las fuentes normativas "
+            "que deberían estar cargadas en `rag/knowledge_base`."
+        )
+
+    # 3) Comprobación del cliente de OpenAI
     client = get_openai_client()
     if client is None:
         st.warning(
@@ -71,6 +162,7 @@ def main() -> None:
 
     st.markdown("---")
 
+    # 4) Botón principal de indexación
     if st.button("🔄 Indexar PDFs y Crear Vectores", type="primary", use_container_width=True):
         if not pdf_files:
             st.warning("No se han encontrado PDFs en `/rag/knowledge_base`. Añade documentos y vuelve a intentarlo.")
